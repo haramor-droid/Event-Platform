@@ -6,8 +6,8 @@
 * **Organisation:** Teco IT Solutions, Work-Integrated Learning (WIL) placement
 * **Author:** PJ-Amor Harakuta (224063596)
 * **Industry Supervisor:** Samuel Moyo
-* **Version:** 0.1 (Draft)
-* **Date:** 27 October 2026
+* **Version:** 0.2 (Draft)
+* **Date:** 28 October 2026
 * **Status:** Draft. Not yet reviewed or approved by the industry supervisor.
 
 **Priority Legend:**
@@ -50,7 +50,7 @@ The people and businesses who provide the events.
 * **Permanent venues and businesses:** Roller rinks, bowling alleys, cinemas, and sports clubs with recurring activities.
 * **Professional event promoters:** Companies running concerts, fundraisers, and festivals.
 * **Independent creators:** Workshop hosts, educators, and community leaders.
-*(Note: Anyone can register as an organiser. Organiser accounts can also use attendee features).*
+*(Note: Anyone can register as an organiser. One organisation is one account with one login. Organiser accounts can also use attendee features).*
 
 **4.3 Administrators**
 The people who look after the content. They review submitted listings, remove invalid ones, and keep the platform relevant. Administrator accounts are created by the system owner and cannot be registered publicly.
@@ -85,20 +85,22 @@ The people who look after the content. They review submitted listings, remove in
 | ID    |                                           Rule                                                                     |
 |-------|-------------------------------------------------------------------------------------------------------------------|
 | BR-01 | **Content relevance.** The platform prioritises current and upcoming events. |
-| BR-02 | **Archive, never delete.** Passed events move to Archived. Data is kept for stats, but hidden from discovery. |
+| BR-02 | **Archive by default.** Passed events move to Archived on the day after their end date. Data is kept for stats and history. Archived events stay viewable by direct link, labelled Archived, but never appear in discovery. Organisers can discard drafts. An administrator may permanently delete clear junk such as duplicates or abusive uploads. Other deletion and recovery procedures are outside the initial scope. |
 | BR-03 | **Active listings.** Organisers may keep multiple active listings simultaneously, provided they are current. |
 | BR-04 | **Approval before publishing.** Every new listing is reviewed by an admin before going live. |
 | BR-05 | **Acceptable content.** Real, lawful events only. Adult/explicit events are not accepted. |
 | BR-06 | **Locked/Editable fields.** Once published, core details (poster, title, category, description) are locked. Logistics (venue, time, links) remain editable. |
 | BR-07 | **Re-approval on change.** Changing a locked field returns the listing to Pending Approval. |
-| BR-08 | **Logged edits.** Every editable change is logged, and users who saved the event are notified. |
-| BR-09 | **Cancelled events.** A cancelled event stays in the discovery feed, labelled Cancelled, for 24 hours after the cancellation, or until its event date if that comes sooner. After that it leaves the feed. The event page keeps working by direct link, with a clear Cancelled banner, until the original event date has passed, then the listing is archived. A cancelled event stays in the saved list of anyone who saved it, labelled Cancelled, until they remove it or the date passes. Users who saved the event or added it to their calendar are notified. The 24 hour period is a setting, not a fixed value. |
+| BR-08 | **Logged edits.** Every editable change is logged, and users who saved the event or added it to their calendar are notified. |
+| BR-09 | **Cancelled events.** A cancelled event stays in the discovery feed, labelled Cancelled, for 24 hours after the cancellation, or until the start of its event date if that comes sooner. After that it leaves the feed. The event page keeps working by direct link, with a clear Cancelled banner, until the original event date has passed, then the listing is archived the following day. A cancelled event stays in the saved list of anyone who saved it, labelled Cancelled, until they remove it or it is archived. Users who saved the event or added it to their calendar are notified. The 24 hour period is a setting, not a fixed value. |
 | BR-10 | **Recurring events.** Approved once as a series. Occurrences move through the lifecycle individually. |
 | BR-11 | **Keeping series current.** Prompt organisers every 3 months to confirm a series is still running. |
-| BR-12 | **Open registration.** Anyone can register as an attendee or organiser. |
+| BR-12 | **Open registration.** Anyone can register as an attendee or organiser. One organisation is one account. |
 | BR-13 | **Time zone.** All times use Africa/Windhoek time (CAT, UTC+2). |
 | BR-14 | **Undoing a cancellation.** An organiser can reverse a cancellation. The listing returns to Published without new approval, because no locked field has changed, and users who saved it are notified that it is back on. |
 | BR-15 | **Cancelled or postponed.** Cancelled means the event is not happening at all. If an event only moves to a new date, time or place, the organiser edits those fields as a normal change and users are notified. Cancelling one occurrence of a series does not cancel the series (BR-10). |
+| BR-16 | **Notifications and reminders.** In-platform notifications and reminders appear in a notification panel (a bell icon with an unread count). Notifications are created by the system when something happens, such as a cancellation, a cancellation being undone, or a change to location, date or time. Reminders are set by the attendee for events they choose, from a small set of lead times (for example 24 hours or 1 hour before), and are created automatically at that time. They are not instant alerts, because the user sees them when they next open the site. Alerts outside the platform (SMS, email or web push) are conditional (UR-16). |
+| BR-17 | **Restoring removed listings.** If an administrator restores a removed listing, it returns to Published without further review, because the restoration is the review. If the organiser corrects a removed listing, it goes to Pending Approval. The administrator may instead send a listing to Pending Approval if they want a second look. |
 
 **Lifecycle States:** `Draft -> Pending Approval -> Published -> Archived` (with branches for Rejected, Removed, and Cancelled).
 
@@ -109,24 +111,25 @@ The people who look after the content. They review submitted listings, remove in
 | UR-02 | Select interests to highlight matching events in discovery.                                              | [M] |
 | UR-03 | Browse current and upcoming events.                                                                      | [M] |
 | UR-04 | Search for events and filter by category, date, and location.                                            | [M] |
-| UR-05 | Open an event page showing poster, title, category, description, date, time, venue, and organiser.       | [M] |
+| UR-05 | Open an event page showing poster, title, category, description, date, time, venue name, full address, and organiser. | [M] |
 | UR-06 | Save/unsave events and view a list of saved events.                                                      | [M] |
 | UR-07 | Follow an external ticket link provided by the organiser.                                                | [S] |
-| UR-08 | See an event's location on a map.                                                                        | [S] |
+| UR-08 | Open the event's location in an external map (such as Google Maps) using a link built from the venue name and address. | [S] |
 | UR-09 | Add an event to a personal calendar and view it.                                                         | [S] |
-| UR-10 | Set in-platform reminders for events they choose.                                                        | [S] |
-| UR-11 | The attendee shall receive an in-platform notification when an event they saved or added to their calendar is cancelled, is back on after a cancellation, or has its location, date or time changed. A cancelled event stays in their saved list, labelled Cancelled.           | [S] | Proposed |
+| UR-10 | Set in-platform reminders for events they choose, from a set of lead times (for example 24 hours or 1 hour before). Reminders appear in the notification panel.                                                                                                             | [S] |
+| UR-11 | Receive in-platform notifications, shown in the notification panel, when a saved or calendar event is cancelled, is back on, or has its location, date or time changed. A cancelled event stays in the saved list, labelled Cancelled.                                            | [S] |
 | UR-12 | See the upcoming sessions of a recurring event.                                                          | [S] |
 | UR-13 | See the organiser's social media links.                                                                  | [C] |
 | UR-14 | See suggestions of similar events on an event page.                                                      | [C] |
 | UR-15 | Reset a forgotten password.                                                                              | [Cond] |
-| UR-16 | Receive notifications outside the platform (SMS or email).                                               | [Cond] |
+| UR-16 | Receive notifications outside the platform (SMS, email or web push).                                     | [Cond] |
+| UR-17 | View a notification panel with an unread count, and mark notifications as read.                          | [S] |
 
 #### 6.3 Organiser Requirements
 | ID    | Requirement                                                                                                   | Priority |
 |-------|---------------------------------------------------------------------------------------------------------------|----------|
 | OR-01 | Register, log in, and manage an organisation profile.                                                         | [M] |
-| OR-02 | Create an event listing with title, category, description, date, time, location, and a required poster image. | [M] |
+| OR-02 | Create an event listing with title, category, description, date, time, venue name, full address, and a required poster image. | [M] |
 | OR-03 | Save a listing as a draft and submit for approval.                                                            | [M] |
 | OR-04 | See the status of listings, and rejection reasons.                                                            | [M] |
 | OR-05 | View and manage active and archived listings.                                                                 | [M] |
@@ -144,7 +147,7 @@ The people who look after the content. They review submitted listings, remove in
 | OR-17 | Receive a daily summary of engagement.                                                                        | [C] |
 | OR-18 | Duplicate an archived listing as a new draft.                                                                 | [C] |
 | OR-19 | Pay a publishing fee per post before a listing goes live.                                                   | [Cond] |
-| OR-20 | The organiser shall be able to undo the cancellation of an event (BR-14).                                      | [S] | Proposed |
+| OR-20 | The organiser shall be able to undo the cancellation of an event (BR-14).                                      | [S] |
 
 #### 6.4 Administrator Requirements
 | ID    |                                        Requirement                            | Priority |
@@ -162,13 +165,14 @@ The people who look after the content. They review submitted listings, remove in
 #### 6.5 System Behaviour
 | ID     |                                   Requirement                                           | Priority |
 |--------|-----------------------------------------------------------------------------------------|----------|
-| SYS-01 | Automatically archive an event once its end date/time passes.                           | [M] |
+| SYS-01 | Automatically archive an event on the day after its end date (Africa/Windhoek time). The rule is also applied when pages load, so an event never shows in discovery after it should have been archived.                                                      | [M] |
 | SYS-02 | Compare edited locked fields against approved versions to trigger re-approval.          | [M] |
 | SYS-03 | Log every change to an editable field (time, user, old/new values).                     | [M] |
 | SYS-04 | Create dated occurrences of recurring series 8 weeks in advance.                        | [S] |
 | SYS-05 | Prompt organisers every 3 months to confirm a series is running; archive if no response.| [S] |
-| SYS-06 | Deliver in-platform notifications for cancellations and changes.                        | [S] |
-| SYS-07 | The system shall remove a cancelled event from the discovery feed 24 hours after the cancellation (or at the event date if sooner), keep its page available by direct link until the event date has passed, and then archive it. The 24 hour period shall be configurable.  | [S] | Proposed |
+| SYS-06 | Create in-platform notifications for cancellations, undone cancellations and changes to editable fields, and trigger reminders at the time the attendee chose.                                                                                             | [S] |
+| SYS-07 | Remove a cancelled event from the discovery feed 24 hours after the cancellation (or at the start of the event date if sooner), keep its page available by direct link until the event date has passed, and archive it the following day. The 24 hour period is configurable. | [S] |
+| SYS-08 | Run scheduled tasks (reminders, series occurrences, 3-month prompts) at regular intervals, for example every 15 minutes. Date-based rules (archiving and the cancelled-event feed rule) shall also be applied whenever pages load, so the platform stays correct even if a scheduled task has not run. | [S] |
 ---
 
 ### 7. Non-Functional Requirements
@@ -181,7 +185,7 @@ The people who look after the content. They review submitted listings, remove in
 | NFR-05 | Access Control  | Server-side checks for role-based permissions (hiding buttons isn't enough). |
 | NFR-06 | Uploads         | Check file types/sizes; store files securely so they cannot execute as code. |
 | NFR-07 | Privacy         | Collect only necessary data; keep credentials out of Git.                    |
-| NFR-08 | Data Retention  | Physical deletion is prohibited; use the archive system.                     |
+| NFR-08 | Data Retention  | Archive is the default for event records (BR-02). Permanent deletion is limited to drafts and admin-removed junk. Personal data is kept only as long as needed (NFR-07).                                                                          |
 | NFR-09 | Accessibility   | Forms have labels; good contrast; keyboard navigable; alt text for posters.  |
 | NFR-10 | Compatibility   | Works on current Chrome, Firefox, Edge, and mobile browsers.                 |
 | NFR-11 | Maintainability | Code in version control; database schema and setup documented.               |
@@ -199,11 +203,10 @@ The people who look after the content. They review submitted listings, remove in
 | US-04 | As an attendee, I want to see all details on one page, so I know what the event is.                            | UR-05 |
 | US-05 | As an attendee, I want to save events, so I can come back to them.                                             | UR-06 |
 | US-06 | As an attendee, I want to open the ticket link, so I can buy a ticket.                                         | UR-07 |
-| US-07 | As an attendee, I want to see the venue on a map, so I can get there.                                          | UR-08 |
+| US-07 | As an attendee, I want to open the venue in a map app, so I can get there.                                     | UR-08 |
 | US-08 | As an attendee, I want to add an event to my calendar and set a reminder.                                      | UR-09, UR-10 |
 | US-09 | As an attendee, I want to be told if a saved event is cancelled or moved.                                      | UR-11, SYS-06 |
 | US-10 | As an attendee, I want to see upcoming dates of a weekly session, so I can plan.                               | UR-12 |
-
 | US-11 | As an organiser, I want to register as a business/venue, so I can publish events.                              | OR-01 |
 | US-12 | As an organiser, I want to create a listing with a poster and submit it.                                       | OR-02, OR-03 |
 | US-13 | As an organiser, I want to see listing status/rejection reasons so I know what to fix.                         | OR-04 |
@@ -212,7 +215,6 @@ The people who look after the content. They review submitted listings, remove in
 | US-16 | As a venue owner, I want to set up a weekly session once, so I don't repost weekly.                            | OR-11, SYS-04 |
 | US-17 | As a venue owner, I want to cancel one session or end the series.                                              | OR-12, OR-13 |
 | US-18 | As an organiser, I want a daily summary of views/saves to track interest.                                      | OR-16, OR-17 |
-
 | US-19 | As an admin, I want a queue of pending listings to review quickly.                                             | AR-02, AR-03 |
 | US-20 | As an admin, I want to remove rule-breaking listings and tell the organiser why.                               | AR-04 |
 | US-21 | As an admin, I want to see recent activity in one place for monitoring.                                        | AR-08 |
@@ -251,14 +253,14 @@ The people who look after the content. They review submitted listings, remove in
 4. Each occurrence archives individually after passing.
 5. Organiser can cancel a session or end the series. System prompts every 3 months to confirm it's running.
 
- **WF-05: Cancelling an event (organiser)**
-
+**WF-05: Cancelling an event (Organiser)**
 1. The organiser opens a published event and cancels it.
-2. The listing stays in the discovery feed, labelled Cancelled, for 24 hours (or until the event date if that is sooner).
+2. The listing stays in the discovery feed, labelled Cancelled, for 24 hours (or until the start of the event date if that is sooner).
 3. Users who saved it or added it to their calendar are notified. It stays in their saved list, labelled Cancelled.
-4. After 24 hours the event leaves the feed. Its page still works by direct link and shows a Cancelled banner until the original event date has passed.
-5. After the event date passes, the listing is archived.
+4. After that, the event leaves the feed. Its page still works by direct link and shows a Cancelled banner.
+5. After the event date has passed, the listing is archived the following day.
 
+*(Alternative: if the organiser undoes the cancellation, the listing returns to Published without approval and users who saved it are told it is back on).*
 Alternative path: if the organiser undoes the cancellation, the listing returns to Published without approval and users who saved it are told it is back on.
 
 **WF-06: Monitoring and removal (Admin)**
@@ -272,7 +274,7 @@ Alternative path: if the organiser undoes the cancellation, the listing returns 
 ### 10. Feature Priorities
 
 **Must Have (Core):** UR-01 to UR-06, OR-01 to OR-07, AR-01 to AR-05, SYS-01 to SYS-03.
-**Should Have (Additional):** UR-07 to UR-12, OR-08 to OR-13, OR-20, AR-06 to AR-08, SYS-04 to SYS-07.
+**Should Have (Additional):** UR-07 to UR-12, UR-17, OR-08 to OR-13, OR-20, AR-06 to AR-08, SYS-04 to SYS-08.
 **Could Have:** UR-13, UR-14, OR-14 to OR-18, AR-09.
 **Conditional:** UR-15, UR-16, OR-19.
 
@@ -281,6 +283,14 @@ Alternative path: if the organiser undoes the cancellation, the listing returns 
 * Recurring events and venues as organisers added as Should Have.
 * Cancelled events, locked field rules, and "still running" prompts added to maintain accuracy.
 * Reviews are left out for now (too much moderation needed for MVP).
+* Venue name and full address are required on every listing. Maps use an external link (such as Google Maps) instead of an embedded Leaflet and OpenStreetMap map.
+* Events archive on the day after their end date.
+
+**Time and Feasibility:**
+* The placement is 480 hours.
+* The Must Have items are the commitment. The Should Have and Could Have items will be reviewed with the supervisor once the core event platform is working, and only then committed to. Recurring events (OR-11 to OR-13, UR-12, SYS-04, SYS-05) are the largest group to review.
+* If time runs short, the order of cuts is: Could Have items, then the 3-month prompt (SYS-05, OR-13), then rolling occurrence generation (SYS-04), then reminders (UR-10).
+* If the locked field comparison (SYS-02) proves too heavy, the fallback is that locked fields cannot be changed after publishing, and the organiser cancels and reposts instead.
 
 ---
 
@@ -307,6 +317,10 @@ The external integrations are still being researched and will be completed in th
 * Multiple languages.
 * Identity verification beyond admin approval.
 
+**Known Limitations:**
+* In-platform notifications and reminders are seen when the user next opens the site. They are not instant alerts.
+* Editable fields such as the venue and ticket link change without review. The monitoring view and the administrator's removal powers are the safeguard.
+* One organisation is one account. Collaboration between organisations is a possible future feature.
 ---
 
 ### 13. Open Questions
@@ -314,16 +328,18 @@ The external integrations are still being researched and will be completed in th
 |-------|------------------------------------------------------------------------|----------------|
 | OQ-01 | Should the platform process ticket payments directly, or just link out? | External link is the requirement. Direct payment is future/conditional. |
 | OQ-02 | Is a publishing fee per post a firm requirement? | Conditional. Needs payment gateway if required. |
-| OQ-03 | Can a free SMS gateway be secured, or should notifications stay in-platform? | In-platform only for now. |
+| OQ-03 | Can a free SMS gateway be secured, or should notifications stay in-platform? Is web push worth researching? | In-platform only for now. Web push needs HTTPS, so it depends on hosting. |
 | OQ-04 | Can email be sent reliably for password resets? | Conditional until confirmed. |
-| OQ-05 | What exactly does the acceptable content rule cover? | Lawful events only; admin decides edge cases. |
+| OQ-05 | What exactly does the acceptable content rule cover? | Lawful events only, admin decides edge cases. |
 | OQ-06 | Is the list of locked fields correct? | Locked: poster, title, category, description. Editable: date, time, venue. May change when development starts |
 | OQ-07 | If trusted organisers are built, how many clean listings earn trust? | Not decided. Only if AR-09 is built. |
-| OQ-08 | Are 8 weeks of occurrences and 3-month prompts the right settings? | Starting values; can be changed. |
+| OQ-08 | Are 8 weeks of occurrences and 3-month prompts the right settings? | Starting values, can be changed. |
 | OQ-09 | What are the starting event categories? | To be agreed during design. |
 | OQ-10 | How are administrator accounts created? | Created by system owner. One at first. |
-| OQ-11 | Should an organiser account also act as an attendee account? | Not sure, maybe as collaborations between organisations in the future |
-| OQ-12 | Is 24 hours the right time for a cancelled event to stay in the discovery feed? | 24 hours, as a configurable setting. |Timer set for now|
+| OQ-11 | Should the platform support events hosted by one organisation in collaboration with another? | Out of the current scope. A possible future version. |
+| OQ-12 | Is 24 hours the right time for a cancelled event to stay in the discovery feed? | 24 hours for now, as a configurable setting. |
+| OQ-13 | Where will the live platform be hosted, and does the host support PHP, MySQL and scheduled tasks (cron)? | Not decided. The supervisor will be asked whether they can provide hosting. Development uses XAMPP locally, with the code kept in GitHub. |
+
 ---
 
 ### 14. Requirements Validation and Approval
