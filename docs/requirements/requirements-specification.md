@@ -92,11 +92,13 @@ The people who look after the content. They review submitted listings, remove in
 | BR-06 | **Locked/Editable fields.** Once published, core details (poster, title, category, description) are locked. Logistics (venue, time, links) remain editable. |
 | BR-07 | **Re-approval on change.** Changing a locked field returns the listing to Pending Approval. |
 | BR-08 | **Logged edits.** Every editable change is logged, and users who saved the event are notified. |
-| BR-09 | **Cancelled events.** Stay visible with a "Cancelled" label until the date passes, then archive. |
+| BR-09 | **Cancelled events.** A cancelled event stays in the discovery feed, labelled Cancelled, for 24 hours after the cancellation, or until its event date if that comes sooner. After that it leaves the feed. The event page keeps working by direct link, with a clear Cancelled banner, until the original event date has passed, then the listing is archived. A cancelled event stays in the saved list of anyone who saved it, labelled Cancelled, until they remove it or the date passes. Users who saved the event or added it to their calendar are notified. The 24 hour period is a setting, not a fixed value. |
 | BR-10 | **Recurring events.** Approved once as a series. Occurrences move through the lifecycle individually. |
 | BR-11 | **Keeping series current.** Prompt organisers every 3 months to confirm a series is still running. |
 | BR-12 | **Open registration.** Anyone can register as an attendee or organiser. |
 | BR-13 | **Time zone.** All times use Africa/Windhoek time (CAT, UTC+2). |
+| BR-14 | **Undoing a cancellation.** An organiser can reverse a cancellation. The listing returns to Published without new approval, because no locked field has changed, and users who saved it are notified that it is back on. |
+| BR-15 | **Cancelled or postponed.** Cancelled means the event is not happening at all. If an event only moves to a new date, time or place, the organiser edits those fields as a normal change and users are notified. Cancelling one occurrence of a series does not cancel the series (BR-10). |
 
 **Lifecycle States:** `Draft -> Pending Approval -> Published -> Archived` (with branches for Rejected, Removed, and Cancelled).
 
@@ -113,7 +115,7 @@ The people who look after the content. They review submitted listings, remove in
 | UR-08 | See an event's location on a map.                                                                        | [S] |
 | UR-09 | Add an event to a personal calendar and view it.                                                         | [S] |
 | UR-10 | Set in-platform reminders for events they choose.                                                        | [S] |
-| UR-11 | Receive notifications for cancellations or changes to saved events.                                      | [S] |
+| UR-11 | The attendee shall receive an in-platform notification when an event they saved or added to their calendar is cancelled, is back on after a cancellation, or has its location, date or time changed. A cancelled event stays in their saved list, labelled Cancelled.           | [S] | Proposed |
 | UR-12 | See the upcoming sessions of a recurring event.                                                          | [S] |
 | UR-13 | See the organiser's social media links.                                                                  | [C] |
 | UR-14 | See suggestions of similar events on an event page.                                                      | [C] |
@@ -142,6 +144,7 @@ The people who look after the content. They review submitted listings, remove in
 | OR-17 | Receive a daily summary of engagement.                                                                        | [C] |
 | OR-18 | Duplicate an archived listing as a new draft.                                                                 | [C] |
 | OR-19 | Pay a publishing fee per post before a listing goes live.                                                   | [Cond] |
+| OR-20 | The organiser shall be able to undo the cancellation of an event (BR-14).                                      | [S] | Proposed |
 
 #### 6.4 Administrator Requirements
 | ID    |                                        Requirement                            | Priority |
@@ -165,7 +168,7 @@ The people who look after the content. They review submitted listings, remove in
 | SYS-04 | Create dated occurrences of recurring series 8 weeks in advance.                        | [S] |
 | SYS-05 | Prompt organisers every 3 months to confirm a series is running; archive if no response.| [S] |
 | SYS-06 | Deliver in-platform notifications for cancellations and changes.                        | [S] |
-
+| SYS-07 | The system shall remove a cancelled event from the discovery feed 24 hours after the cancellation (or at the event date if sooner), keep its page available by direct link until the event date has passed, and then archive it. The 24 hour period shall be configurable.  | [S] | Proposed |
 ---
 
 ### 7. Non-Functional Requirements
@@ -248,11 +251,15 @@ The people who look after the content. They review submitted listings, remove in
 4. Each occurrence archives individually after passing.
 5. Organiser can cancel a session or end the series. System prompts every 3 months to confirm it's running.
 
-**WF-05: Cancelling an event (Organiser)**
-1. Organiser cancels a published event.
-2. Listing stays visible with a "Cancelled" label.
-3. Savers/calendar users notified.
-4. Listing archives after the date passes.
+ **WF-05: Cancelling an event (organiser)**
+
+1. The organiser opens a published event and cancels it.
+2. The listing stays in the discovery feed, labelled Cancelled, for 24 hours (or until the event date if that is sooner).
+3. Users who saved it or added it to their calendar are notified. It stays in their saved list, labelled Cancelled.
+4. After 24 hours the event leaves the feed. Its page still works by direct link and shows a Cancelled banner until the original event date has passed.
+5. After the event date passes, the listing is archived.
+
+Alternative path: if the organiser undoes the cancellation, the listing returns to Published without approval and users who saved it are told it is back on.
 
 **WF-06: Monitoring and removal (Admin)**
 1. Admin checks monitoring view for new submissions/edits.
@@ -265,7 +272,7 @@ The people who look after the content. They review submitted listings, remove in
 ### 10. Feature Priorities
 
 **Must Have (Core):** UR-01 to UR-06, OR-01 to OR-07, AR-01 to AR-05, SYS-01 to SYS-03.
-**Should Have (Additional):** UR-07 to UR-12, OR-08 to OR-13, AR-06 to AR-08, SYS-04 to SYS-06.
+**Should Have (Additional):** UR-07 to UR-12, OR-08 to OR-13, OR-20, AR-06 to AR-08, SYS-04 to SYS-07.
 **Could Have:** UR-13, UR-14, OR-14 to OR-18, AR-09.
 **Conditional:** UR-15, UR-16, OR-19.
 
@@ -278,7 +285,7 @@ The people who look after the content. They review submitted listings, remove in
 ---
 
 ### 11. External Integrations
-
+The external integrations are still being researched and will be completed in the next version of this document (see GitHub issues #2, #3 and #4). Until then, none of them is a firm requirement.
 
 
 ### 12. Scope and Limitations
@@ -316,7 +323,7 @@ The people who look after the content. They review submitted listings, remove in
 | OQ-09 | What are the starting event categories? | To be agreed during design. |
 | OQ-10 | How are administrator accounts created? | Created by system owner. One at first. |
 | OQ-11 | Should an organiser account also act as an attendee account? | Not sure, maybe as collaborations between organisations in the future |
-
+| OQ-12 | Is 24 hours the right time for a cancelled event to stay in the discovery feed? | 24 hours, as a configurable setting. |Timer set for now|
 ---
 
 ### 14. Requirements Validation and Approval
