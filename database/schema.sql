@@ -31,6 +31,7 @@ DROP TABLE IF EXISTS organiser_social_links;
 DROP TABLE IF EXISTS organiser_profiles;
 DROP TABLE IF EXISTS users; 
 DROP TABLE IF EXISTS app_settings;
+SET FOREIGN_KEY_CHECKS=1;
 
 -- Users Table 
 CREATE TABLE users (
@@ -56,8 +57,8 @@ CREATE TABLE organiser_profiles (
   is_trusted TINYINT(1) NOT NULL DEFAULT 0, -- AR-09(Could have)
  PRIMARY KEY (organiser_id),
  UNIQUE KEY uq_organiser_user (user_id),
-  CONSTRAINT fk_organiser_user FOREIGN KEY (user_id) REFERENCES users(user_id)
-   ON DELETE CASCADE
+  CONSTRAINT fk_organiser_user
+   FOREIGN KEY (user_id) REFERENCES users(user_id)
 
 )ENGINE = InnoDB;
 
@@ -105,7 +106,7 @@ CREATE TABLE event_series (
     end_DATE DATE  NULL, -- NULL = open-ended series
     start_time TIME NOT NULL, -- each sesssion must have a start time
     end_time TIME NOT NULL,
-    status ENUM('active','ended', 'archived') NOT NULL DEFAULT 'active',
+    status ENUM('pending_approval','active','ended') NOT NULL DEFAULT 'pending_approval',
     generated_until DATE  NULL, -- how far occerences have been created (SYS - 04)
     last_confirmed_at DATETIME  NULL ,
     next_prompt_at DATETIME  NULL,
@@ -113,10 +114,9 @@ CREATE TABLE event_series (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(series_id),
     KEY idx_series_organiser(organiser_id),
-    KEY idx_series_prompt(status),
+    KEY idx_series_prompt(status, next_prompt_at),
     CONSTRAINT fk_series_organiser
-    FOREIGN KEY(organiser_id) REFERENCES organiser_profiles(organiser_id)
-    ON DELETE CASCADE,
+    FOREIGN KEY(organiser_id) REFERENCES organiser_profiles(organiser_id),
     CONSTRAINT chk_series_dates CHECK(end_date IS NULL OR end_date >=start_date)
 )ENGINE=InnoDB;
 
@@ -126,7 +126,7 @@ CREATE TABLE events(
   event_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   organiser_id INT UNSIGNED NOT NULL,
   category_id INT UNSIGNED NOT NULL,
-  series_id INT UNSIGNED  NULL, ----- NULL for one-off events
+  series_id INT UNSIGNED  NULL, -- NULL for one-off events
   title VARCHAR(200) NOT NULL,
   description TEXT NOT NULL,
   poster_path VARCHAR(500) NOT NULL,
@@ -152,8 +152,7 @@ CREATE TABLE events(
   KEY idx_events_category (category_id),
   KEY idx_events_series (series_id),
    CONSTRAINT fk_events_organiser
-    FOREIGN KEY (organiser_id) REFERENCES organiser_profiles (organiser_id)
-    ON DELETE CASCADE,
+    FOREIGN KEY (organiser_id) REFERENCES organiser_profiles (organiser_id),
   CONSTRAINT fk_events_category
     FOREIGN KEY (category_id) REFERENCES categories (category_id),
   CONSTRAINT fk_events_series
@@ -238,7 +237,6 @@ CREATE TABLE event_change_log(
     ON DELETE CASCADE,
     CONSTRAINT fk_log_user
     FOREIGN KEY(changed_by)REFERENCES users(user_id)
-    ON DELETE
 )ENGINE=InnoDB;
 
 -- Saved Events Table 
@@ -246,7 +244,7 @@ CREATE TABLE saved_events(
     user_id INT UNSIGNED NOT NULL,
     event_id INT UNSIGNED NOT NULL,
     saved_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY( events_id),
+    PRIMARY KEY(user_id, event_id),
     KEY idx_saved_event(event_id),
     CONSTRAINT fk_saved_user
     FOREIGN KEY(user_id)REFERENCES users(user_id)
@@ -367,7 +365,7 @@ INSERT INTO app_settings(setting_key,setting_value) VALUES
 -- INSERT INTO users (full_name, email, password_hash, role)
 -- VALUES ('Admin', 'admin@example.com', '<paste_password_hash_here>', 'admin');
 
-SET FOREIGN_KEY_CHECKS=1;
+
 
 
 SHOW TABLES;
