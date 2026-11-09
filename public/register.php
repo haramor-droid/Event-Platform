@@ -1,32 +1,34 @@
 <?php
-require __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/database.php';
 
-$message = '';
+$message  = '';
+$fullName = '';
+$email    = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $fullName = trim($_POST['full_name'] ?? '');
   $email    = trim($_POST['email'] ?? '');
   $password = $_POST['password'] ?? '';
 
-  if ($fullName === '' || strlen($fullName) > 255) {
+  if ($fullName === '' || mb_strlen($fullName) > 255) {
     $message = 'Please enter your full name.';
-  } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 100) {
-    $message = 'Invalid email (max 100 characters).';   // column is VARCHAR(100)
-  } elseif (strlen($password) < 8) {
-    $message = 'Password must be at least 8 characters.';
+  } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 100) {
+    $message = 'Invalid email (max 100 characters).';
+  } elseif (strlen($password) < 8 || strlen($password) > 72) {
+    $message = 'Password must be 8 to 72 characters.';
   } else {
     $hash = password_hash($password, PASSWORD_DEFAULT);
 
     try {
-      // role and account_status are left out on purpose: the DB defaults
-      // give every new user 'attendee' and 'active'.
       $stmt = $pdo->prepare(
         'INSERT INTO users (email, full_name, password_hash) VALUES (?, ?, ?)'
       );
       $stmt->execute([$email, $fullName, $hash]);
-      $message = 'Registered! You can now log in.';
+
+      header('Location: login.php?registered=1');
+      exit;
     } catch (PDOException $e) {
-      if ($e->getCode() === '23000') {     // violates uq_users_email
+      if ((int) $e->errorInfo[1] === 1062) {      // duplicate email only
         $message = 'That email is already registered.';
       } else {
         throw $e;
@@ -35,10 +37,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 ?>
-<?php if ($message): ?><p><?= htmlspecialchars($message) ?></p><?php endif; ?>
-<form method="post">
-  <input type="text" name="full_name" placeholder="Full name" required>
-  <input type="email" name="email" placeholder="Email" required>
-  <input type="password" name="password" minlength="8" placeholder="Password" required>
-  <button>Register</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register</title>
+</head>
+<body>
+  <?php if ($message): ?><p><?= htmlspecialchars($message) ?></p><?php endif; ?>
+
+  <form method="post">
+    <label for="full_name">Full name</label>
+    <input type="text" id="full_name" name="full_name" maxlength="255"
+           autocomplete="name" required value="<?= htmlspecialchars($fullName) ?>">
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" maxlength="100"
+           autocomplete="email" required value="<?= htmlspecialchars($email) ?>">
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" minlength="8"
+           maxlength="72" autocomplete="new-password" required>
+
+    <button>Register</button>
+  </form>
+</body>
+</html> 
