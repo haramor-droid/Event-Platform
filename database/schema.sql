@@ -192,7 +192,7 @@ CREATE TABLE event_approved_versions (
 CREATE TABLE event_images(
     image_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     event_id INT UNSIGNED NOT NULL,
-    image_path VARCHAR(500) NULL,
+    image_path VARCHAR(500) NOT NULL,
     sort_order INT UNSIGNED NOT NULL DEFAULT 0,
     PRIMARY KEY(image_id),
     KEY idx_images_event(event_id,sort_order),
