@@ -19,14 +19,14 @@ if(!isset($_SESSION['user_id'])){
 //lod the user from the database (font trust the session for details)
 
 $stmt=$pdo->prepare(
-    'SELECT full_name, role, account_status FORM users WHERE user_id=?'
+    'SELECT full_name, role, account_status FROM users WHERE user_id=?'
 );
 
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 
 // If the user was deleted or suspended since logging in, end the session
-if($user || $user['account_status'] !== 'active' ){
+if(!$user || $user['account_status'] !== 'active' ){
    header('Location : logout.php');
    exit;
 }
@@ -36,7 +36,7 @@ if($user || $user['account_status'] !== 'active' ){
 <html lang ="en">
     <head>
         <meta charset="utf-8">
-        <meta name = "viewport" content= "width=device-width, initial-sacel=1">
+        <meta name = "viewport" content= "width=device-width, initial-scale=1">
         <title>Dashboard</title>
     </head>
     <body>
