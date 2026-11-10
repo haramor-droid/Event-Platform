@@ -1,14 +1,16 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
 
-$message  = '';
-$fullName = '';
-$email    = '';
+$message     = '';
+$fullName    = '';
+$email       = '';
+$accountType = 'attendee';          // NEW: default choice
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $fullName = trim($_POST['full_name'] ?? '');
-  $email    = trim($_POST['email'] ?? '');
-  $password = $_POST['password'] ?? '';
+  $fullName    = trim($_POST['full_name'] ?? '');
+  $email       = trim($_POST['email'] ?? '');
+  $password    = $_POST['password'] ?? '';
+  $accountType = $_POST['account_type'] ?? 'attendee';   // NEW: read from the form
 
   if ($fullName === '' || mb_strlen($fullName) > 255) {
     $message = 'Please enter your full name.';
@@ -16,19 +18,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = 'Invalid email (max 100 characters).';
   } elseif (strlen($password) < 8 || strlen($password) > 72) {
     $message = 'Password must be 8 to 72 characters.';
+  } elseif (!in_array($accountType, ['attendee', 'organiser'], true)) {   // NEW: the elseif
+    $message = 'Please choose a valid account type.';
   } else {
     $hash = password_hash($password, PASSWORD_DEFAULT);
 
     try {
-      $stmt = $pdo->prepare(
-        'INSERT INTO users (email, full_name, password_hash) VALUES (?, ?, ?)'
-      );
-      $stmt->execute([$email, $fullName, $hash]);
+      $pdo->beginTransaction();                                          // NEW
 
+      $stmt = $pdo->prepare(
+        'INSERT INTO users (email, full_name, password_hash, role) VALUES (?, ?, ?, ?)'
+      );
+      $stmt->execute([$email, $fullName, $hash, $accountType]);          // CHANGED: role added
+
+      if ($accountType === 'organiser') {                                // NEW
+        $userId = (int) $pdo->lastInsertId();
+        $stmt = $pdo->prepare('INSERT INTO organiser_profiles (user_id) VALUES (?)');
+        $stmt->execute([$userId]);
+      }
+
+      $pdo->commit();                                                    // NEW
       header('Location: login.php?registered=1');
       exit;
     } catch (PDOException $e) {
-      if ((int) $e->errorInfo[1] === 1062) {      // duplicate email only
+      if ($pdo->inTransaction()) {                                       // NEW
+        $pdo->rollBack();
+      }
+      if ((int) $e->errorInfo[1] === 1062) {
         $message = 'That email is already registered.';
       } else {
         throw $e;
@@ -60,7 +76,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <input type="password" id="password" name="password" minlength="8"
            maxlength="72" autocomplete="new-password" required>
 
+    <!-- NEW: account type choice -->
+    <fieldset>
+      <legend>I am registering as</legend>
+      <label><input type="radio" name="account_type" value="attendee"
+             <?= $accountType === 'attendee' ? 'checked' : '' ?>> Attendee</label>
+      <label><input type="radio" name="account_type" value="organiser"
+             <?= $accountType === 'organiser' ? 'checked' : '' ?>> Organiser</label>
+    </fieldset>
+
     <button>Register</button>
   </form>
 </body>
-</html> 
+</html>
