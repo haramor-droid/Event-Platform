@@ -90,7 +90,7 @@ CREATE TABLE user_interests (
     PRIMARY KEY(user_id, category_id),
     KEY idx_interests_category(category_id),
     CONSTRAINT fk_interest_user
-    FOREIgN KEY(user_id) REFERENCES users(user_id)
+    FOREIGN KEY(user_id) REFERENCES users(user_id)
     ON DELETE CASCADE,
     CONSTRAINT fk_interest_category
     FOREIGN KEY(category_id)REFERENCES categories(category_id)
@@ -103,7 +103,7 @@ CREATE TABLE event_series (
     organiser_id INT UNSIGNED NOT NULL,
     recurrence_type ENUM( 'weekly', 'monthly') NOT NULL,
     start_date DATE NOT NULL ,
-    end_DATE DATE  NULL, -- NULL = open-ended series
+    end_date DATE  NULL, -- NULL = open-ended series
     start_time TIME NOT NULL, -- each sesssion must have a start time
     end_time TIME NOT NULL,
     status ENUM('pending_approval','active','ended') NOT NULL DEFAULT 'pending_approval',
