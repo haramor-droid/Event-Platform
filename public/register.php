@@ -5,12 +5,14 @@ $message     = '';
 $fullName    = '';
 $email       = '';
 $accountType = 'attendee';          // NEW: default choice
+$orgName ='';      //New needs to match database
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $fullName    = trim($_POST['full_name'] ?? '');
   $email       = trim($_POST['email'] ?? '');
   $password    = $_POST['password'] ?? '';
   $accountType = $_POST['account_type'] ?? 'attendee';   // NEW: read from the form
+  $orgName     = trim($_POST['org_name']?? ''); //NEW
 
   if ($fullName === '' || mb_strlen($fullName) > 255) {
     $message = 'Please enter your full name.';
@@ -20,7 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = 'Password must be 8 to 72 characters.';
   } elseif (!in_array($accountType, ['attendee', 'organiser'], true)) {   // NEW: the elseif
     $message = 'Please choose a valid account type.';
-  } else {
+  } elseif($accountType === 'orgganiser' 
+                                     && ($orgName === '' || mb_strlen($orgName)>150)) {
+                        $message = 'Organisers must enter an organisation name (max 150 characters).';
+                                     }// New
+  
+  else {
     $hash = password_hash($password, PASSWORD_DEFAULT);
 
     try {
@@ -33,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       if ($accountType === 'organiser') {                                // NEW
         $userId = (int) $pdo->lastInsertId();
-        $stmt = $pdo->prepare('INSERT INTO organiser_profiles (user_id) VALUES (?)');
-        $stmt->execute([$userId]);
+        $stmt = $pdo->prepare('INSERT INTO organiser_profiles (user_id, org_name) VALUES (?,?)');// Changed
+        $stmt->execute([$userId,$orgName]);
       }
 
       $pdo->commit();                                                    // NEW
@@ -84,6 +91,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <label><input type="radio" name="account_type" value="organiser"
              <?= $accountType === 'organiser' ? 'checked' : '' ?>> Organiser</label>
     </fieldset>
+
+    <!-- New: This is for the organisers ONLY -->
+     <label for="org_name">Organisation name (organisers only)</label>
+     <input type="text" id ="org_name" name= "org_name" maxlength = "150" value= "<?= htmlspecialchars($orgName) ?>" >
 
     <button>Register</button>
   </form>

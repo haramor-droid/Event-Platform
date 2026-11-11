@@ -24,11 +24,13 @@
 
         $stmt->execute([$_SESSION['user_id']]);
         $user = $stmt->fetch();
+
         return $user ?: null;
  }
  // Use at the top of any page that needs a login. Returns the user.
  function require_login(PDO $pdo): array {
    $user=current_user($pdo);
+
    if($user === null){
     header('Location: login.php');
     exit;
@@ -50,6 +52,17 @@ return $user;
         exit('Access denied.');
     }
     return $user;
+
+ }
+
+ //events.organiser points at organiser_profiles.organiser_id NOT users.user_id
+ // Organiser pages look it up from the logged-in user.
+
+ function current_organiser(PDO $pdo, int $userId): ?int{
+$stmt = $pdo->prepare('SELECT organiser_id FROM organiser_profiles WHERE user_id=?');
+$stmt-> execute([$userId]);
+$id = $stmt->fetchColumn();
+return $id === false ? null : (int) $id;
 
  }
 
