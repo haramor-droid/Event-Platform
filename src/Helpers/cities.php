@@ -1,0 +1,2 @@
+<?php
+const CITIES = ['Windhoek', 'Swakopmund', 'Walvis Bay', 'Oshakati', 'Ongwediva', 'Rundu','Henties Bay','Grooftfontein', 'Mariental', 'Okahandja','Otjiwarango','Outjo','Gobabis','Tsumeb','Rehoboth','Tsumeb'];
