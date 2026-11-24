@@ -27,4 +27,6 @@ screens are done.
 | 19-admin-activity.png | Admin activity               | AR-08                                       |
 | 20-admin-users.png | Admin users                     | AR-07                                       |
 
+Notes: Published rows on the organiser dashboard also show Edit, Cancel event and view, save and calendar counts (OR-06, OR-09, OR-16). The Create event button sits at the bottom of the dashboard.
+
 Not yet drawn: My calendar and reminders (UR-09, UR-10), Admin categories (AR-06).

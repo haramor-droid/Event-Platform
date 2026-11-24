@@ -15,6 +15,11 @@
 
  //Returns the logged-in users details form the database or null if nobody is logged in
  function current_user(PDO $pdo): ?array{
+    
+  if(!isset($_COOKIE[session_name()])){
+    return null;  // no session cookie, so nobody is logged in
+  }
+
     start_secure_session();
     if(!isset($_SESSION['user_id'])){
         return null;
