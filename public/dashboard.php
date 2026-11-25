@@ -1,48 +1,43 @@
 <?php
-session_set_cookie_params([
-    'httponly'=> true,
-    'samesite' => 'Lax',
-    'secure'=> !empty($_SERVER['HTTPS']),
+require_once __DIR__ . '/../config/database.php'; // brings database (to use PDO)
+require_once __DIR__ . '/../src/Helpers/auth.php';
 
-]);
+// Note: require_login() handles the secure session start, the cookie parameters 
+// (httponly, samesite, secure), and the "Guard" check (if not logged in, redirect to login.php).
+// It also handles loading the user from the database to ensure we don't trust the session for details.
+// If the user was deleted or suspended since logging in, require_login() sends them to logout.php.
+$user = require_login($pdo);
 
-session_start();
-require_once __DIR__ .'/../config/database.php';
-
-//Guard: not logged in, so go to the login page
-
-if(!isset($_SESSION['user_id'])){
-    header('Location : login.php');
-    exit;
-}
-
-//lod the user from the database (font trust the session for details)
-
-$stmt=$pdo->prepare(
-    'SELECT full_name, role, account_status FROM users WHERE user_id=?'
-);
-
-$stmt->execute([$_SESSION['user_id']]);
-$user = $stmt->fetch();
-
-// If the user was deleted or suspended since logging in, end the session
-if(!$user || $user['account_status'] !== 'active' ){
-   header('Location : logout.php');
-   exit;
-}
-
+$pageTitle = 'Dashboard';
+require __DIR__ . '/../src/Views/header.php'; // Load the new Bootstrap header
 ?>
-<!DOCTYPE html>
-<html lang ="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name = "viewport" content= "width=device-width, initial-scale=1">
-        <title>Dashboard</title>
-    </head>
-    <body>
-        <h1>Welcome, <?= htmlspecialchars($user['full_name']) ?></h1>
-        <p>Your role <?= htmlspecialchars($user['role']) ?></p>
-        <p><a href="logout.php">Log out</a></p>
-    </body>
 
-</html>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="h3 mb-3">Welcome, <?= htmlspecialchars($user['full_name']) ?></h1>
+            
+            <!-- Display the user's role -->
+            <p class="text-muted">Your role: <strong><?= htmlspecialchars($user['role']) ?></strong></p>
+            
+            <!-- Add some placeholder content for the dashboard based on your wireframes -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Actions</h5>
+                    <p class="card-text">What would you like to do today?</p>
+                    
+                    <?php if ($user['role'] === 'organiser'): ?>
+                        <a href="create_event.php" class="btn btn-dark">Create an Event</a>
+                        <a href="my_events.php" class="btn btn-outline-dark">View My Events</a>
+                    <?php else: ?>
+                        <a href="index.php" class="btn btn-dark">Browse Events</a>
+                        <a href="saved.php" class="btn btn-outline-dark">View Saved Events</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<?php require __DIR__ . '/../src/Views/footer.php'; ?>
