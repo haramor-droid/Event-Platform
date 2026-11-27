@@ -6,7 +6,7 @@
 * **Organisation:** Teco IT Solutions, Work-Integrated Learning (WIL) placement
 * **Author:** PJ-Amor Harakuta (224063596)
 * **Industry Supervisor:** Samuel Moyo
-* **Version:** 0.3 (Draft)
+* **Version:** 0.4 (Draft)
 * **Date:** 2 November 2026
 * **Status:** Draft. Not yet reviewed or approved by the industry supervisor.
 
@@ -161,7 +161,7 @@ The people who look after the content. They review submitted listings, remove in
 | AR-04 | Remove a published listing (with a reason) and restore it later.              | [M] |
 | AR-05 | Archive outdated or invalid listings manually.                                | [M] |
 | AR-06 | Manage the list of event categories.                                          | [S] |
-| AR-07 | Suspend and reactivate user/organiser accounts.                               | [S] |
+| AR-07 | Suspend and reactivate user/organiser accounts.Suspending an organiser archives their live listings                               | [S] |
 | AR-08 | View a monitoring dashboard of recent activity (new subs, edits, removals).   | [S] |
 | AR-09 | Mark organisers as "trusted" to bypass approval (but still allow removal).    | [C] |
 
@@ -333,15 +333,15 @@ The external integrations are still being researched and will be completed in th
 * In-platform notifications and reminders are seen when the user next opens the site. They are not instant alerts.
 * Editable fields such as the venue and ticket link change without review. The monitoring view and the administrator's removal powers are the safeguard.
 * One organisation is one account. Collaboration between organisations is a possible future feature.
-* The user survey had 12 usable responses, mostly young phone users reached through friends. It is indicative and not representative.
+* The user survey had 26 usable responses (23 attendees and 6 organisers, 3 of whom also attend events), mostly young phone users reached through friends.It is indicative and not representative
 ---
 
 ### 13. Open Questions
 | ID    |                                                            Question    | Current Stance |
 |-------|------------------------------------------------------------------------|----------------|
 | OQ-01 | Should the platform process ticket payments directly, or just link out? | External link is the requirement. Direct payment is future/conditional. |
-| OQ-02 | Is a publishing fee per post a firm requirement? | Conditional. Needs a payment gateway if required. In the survey, cost and unclear results were the main worries, so posting stays free for the MVP. |
-| OQ-03 | Can a free SMS gateway be secured, or should notifications stay in-platform? Is web push worth researching? | In-platform only for now. In the survey, 6 of 10 attendees wanted a phone notification, so web push is a priority to research. It needs HTTPS, so it depends on hosting. |
+| OQ-02 | Is a publishing fee per post a firm requirement? | Conditional. Needs a payment gateway if required. In the survey, cost and unclear results were the main worries, so posting stays free for the MVP. | 3 of 6 organisers said they would pay a small fee and 5 of 6 picked the under N$50 to 100 option
+| OQ-03 | Can a free SMS gateway be secured, or should notifications stay in-platform? Is web push worth researching? | In-platform only for now. In the survey, 9 of 23 attendees wanted a phone notification, 6 wanted SMS so web push and SMS are a priority to research. It needs HTTPS, so it depends on hosting. |
 | OQ-04 | Can email be sent reliably for password resets? | Conditional until confirmed. |
 | OQ-05 | What exactly does the acceptable content rule cover? | Lawful events only, admin decides edge cases. |
 | OQ-06 | Is the list of locked fields correct? | Locked: poster, title, category, description. Editable: date, time, venue. May change when development starts |
