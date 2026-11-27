@@ -1,2 +1,2 @@
 <?php
-const TOWNS = ['Windhoek', 'Swakopmund', 'Walvis Bay', 'Oshakati', 'Ongwediva', 'Rundu','Henties Bay','Grooftfontein', 'Mariental', 'Okahandja','Otjiwarango','Outjo','Gobabis','Tsumeb','Rehoboth','Tsumeb'];
+const TOWNS = ['Windhoek', 'Swakopmund', 'Walvis Bay', 'Oshakati', 'Ongwediva', 'Rundu','Henties Bay','Grootfontein', 'Mariental', 'Okahandja','Otjiwarongo','Outjo','Gobabis','Tsumeb','Rehoboth','Tsumeb','Karibib','Ondangwa','Katima Mulilo','Keetmanshoop'];
