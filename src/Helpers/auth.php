@@ -1,3 +1,4 @@
+
 <?php
  // This file is a helper that holds the login checks in one place, so every page doesnt repeat them
 
@@ -63,12 +64,11 @@ return $user;
  //events.organiser points at organiser_profiles.organiser_id NOT users.user_id
  // Organiser pages look it up from the logged-in user.
 
- function current_organiser(PDO $pdo, int $userId): ?int{
+ function current_organiser_id(PDO $pdo, int $userId): ?int{
 $stmt = $pdo->prepare('SELECT organiser_id FROM organiser_profiles WHERE user_id=?');
 $stmt-> execute([$userId]);
 $id = $stmt->fetchColumn();
 return $id === false ? null : (int) $id;
-
  }
 
 // Redirect and stop

@@ -61,6 +61,16 @@ if ($navUser) {
   ];
 }
 ?>
+<?php
+/**
+ * Event form partial. Included by create_event.php (and later the edit page),
+ * which define these variables first.
+ *
+ * @var array<string,mixed> $f          Form values (see event_defaults())
+ * @var array<int,array>    $categories Rows with category_id and name
+ */
+/** @var PDO $pdo */
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
